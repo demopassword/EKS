@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  serviceAccountName: fluentd-role
+  automountServiceAccountToken: false
+  containers:
+  - name: count
+    image: busybox:1.28
+    args:
+    - /bin/sh
+    - -c
+    - >
+      i=0;
+      while true;
+      do
+        echo "$i: $(date)" >> /var/log/1.log;
+        echo "$(date) INFO $i" >> /var/log/2.log;
+        i=$((i+1));
+        sleep 1;
+      done
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+  - name: count-agent
+    image: fluentd:latest
+    command: ["/bin/sh"]
+    args:
+    - -c
+    - >
+      export GEM_HOME="$HOME/.gem" &&
+      gem install fluent-plugin-cloudwatch-logs &&
+      exec fluentd -c /etc/fluentd-config/fluentd.conf
+    env:
+    - name: FLUENTD_ARGS
+      value: -c /etc/fluentd-config/fluentd.conf
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+    - name: config-volume
+      mountPath: /etc/fluentd-config
+  volumes:
+  - name: varlog
+    emptyDir: {}
+  - name: config-volume
+    configMap:
+      name: fluentd-config
