@@ -1,4 +1,4 @@
-## Fargate log roeuting
+## Fargate log routing
 
 *`aws-observability-namespace`*.yaml
 
