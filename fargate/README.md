@@ -2,7 +2,7 @@
 
 *`aws-observability-namespace`*.yaml
 
-```python
+```yaml
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -17,7 +17,7 @@ kubectl apply -f aws-observability-namespace.yaml
 
 aws-logging-cloudwatch-configmap.yaml
 
-```python
+```yaml
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -70,7 +70,7 @@ aws iam attach-role-policy \
 
 *`aws-logging-opensearch-configmap`*.yaml
 
-```python
+```yaml
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -106,7 +106,7 @@ aws iam attach-role-policy \
 
 *`aws-logging-firehose-configmap`*.yaml
 
-```python
+```yaml
 kind: ConfigMap
 apiVersion: v1
 metadata:
