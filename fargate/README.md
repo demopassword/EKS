@@ -15,7 +15,7 @@ kubectl apply -f aws-observability-namespace.yaml
 ```
 ## to cloudwatch
 
-aws-logging-cloudwatch-configmap.yaml
+*`aws-logging-cloudwatch-configmap`*.yaml
 
 ```yaml
 kind: ConfigMap
