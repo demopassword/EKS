@@ -1,4 +1,4 @@
-## Fluentd sidecer logging
+## Fluentd sidecar logging
 create service account
 ```
 eksctl create iamserviceaccount --cluster=skills-cluster --name=fluentd-role --attach-policy-arn=arn:aws:iam::aws:policy/CloudWatchFullAccess --approve
