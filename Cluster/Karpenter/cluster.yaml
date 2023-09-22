@@ -1,0 +1,100 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: skills-cluster
+  version: "1.27"
+  region: ap-northeast-2
+
+# eksctl utils update-cluster-endpoints --name=wsi-api-cluster --private-access=true --public-access=false
+
+vpc:
+  subnets:
+    private:
+      private-a: { id: subnet-0ee3798a0c8ff9c75 }
+      private-b: { id: subnet-0a8528f1596086a4a }
+      private-c: { id: subnet-0e16dd8c83f0a86ce }
+
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["*"]
+
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: aws-load-balancer-controller
+      namespace: kube-system
+    wellKnownPolicies:
+      awsLoadBalancerController: true
+  - metadata:
+      name: cluster-autoscaler
+      namespace: kube-system
+      labels: {aws-usage: "cluster-ops"}
+    wellKnownPolicies:
+      autoScaler: true
+  - metadata:
+      name: autoscaler-service
+      namespace: kube-system
+    attachPolicy:
+      Version: "2012-10-17"
+      Statement:
+      - Effect: Allow
+        Action:
+        - "autoscaling:DescribeAutoScalingGroups"
+        - "autoscaling:DescribeAutoScalingInstances"
+        - "autoscaling:DescribeLaunchConfigurations"
+        - "autoscaling:DescribeTags"
+        - "autoscaling:SetDesiredCapacity"
+        - "autoscaling:TerminateInstanceInAutoScalingGroup"
+        - "ec2:DescribeLaunchTemplateVersions"
+        Resource: '*'
+
+managedNodeGroups:
+  - name: skills-app
+    labels: { skills/dedicated: app }
+    instanceType: c5.large
+    instanceName: skills-app
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 20
+    privateNetworking: true
+    volumeType: gp2
+    volumeEncrypted: true
+    subnets:
+      - private-a
+      - private-b
+      - private-c
+    tags:
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/skills-cluster: "owned"
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        externalDNS: true
+        certManager: true
+
+  - name: skills-addon
+    labels: { skills/dedicated: addon }
+    instanceType: c5.large
+    instanceName: skills-addon
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 20
+    privateNetworking: true
+    volumeType: gp2
+    volumeEncrypted: true
+    subnets:
+      - private-a
+      - private-b
+      - private-c
+    tags:
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/skills-cluster: "owned"
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        externalDNS: true
+        certManager: true
