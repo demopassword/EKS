@@ -14,6 +14,20 @@ kubernetes.io/role/elb
 kubernetes.io/role/internal-elb
 1
 ```
+# ingress install
+```
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+    -n kube-system \
+    --set clusterName=Your_cluster_name \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=aws-load-balancer-controller \
+    --set image.repository=602401143452.dkr.ecr.ap-northeast-2.amazonaws.com/amazon/aws-load-balancer-controller \
+    --set region=ap-northeast-2 \
+    --set vpcId=Your_vpc_id
+```
 
 # localhost 도메인에 대한 HTTPS 인증서를 만드는 방법 
 

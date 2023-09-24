@@ -5,16 +5,27 @@ metadata:
   name: skills-cluster
   version: "1.27"
   region: ap-northeast-2
+  tags:
+    karpenter.sh/discovery: skills-cluster
 
-# eksctl utils update-cluster-endpoints --name=wsi-api-cluster --private-access=true --public-access=false
+karpenter:
+  version: 'v0.29.2'
+  createServiceAccount: true
+  withSpotInterruptionQueue: true
 
 vpc:
   subnets:
     private:
-      private-a: { id: subnet-0ee3798a0c8ff9c75 }
-      private-b: { id: subnet-0a8528f1596086a4a }
-      private-c: { id: subnet-0e16dd8c83f0a86ce }
+      private-a: { id: subnet-098c9f50ea1ba367b }
+      private-b: { id: subnet-0f314819465c62610 }
+      private-c: { id: subnet-028dcf7dac4effdb1 }
 
+iamIdentityMappings:
+  - arn: arn:aws:iam::532003114460:role/AdministratorAccess
+    groups:
+      - system:master
+    username: admin
+    noDuplicateARNs: true
 
 cloudWatch:
   clusterLogging:
@@ -25,61 +36,51 @@ iam:
   withOIDC: true
   serviceAccounts:
   - metadata:
+      name: appmesh-controller
+      namespace: appmesh-system
+    attachPolicyARNs:
+      - "arn:aws:iam::aws:policy/AWSCloudMapFullAccess"
+      - "arn:aws:iam::aws:policy/AWSAppMeshFullAccess"
+  - metadata:
       name: aws-load-balancer-controller
       namespace: kube-system
     wellKnownPolicies:
       awsLoadBalancerController: true
   - metadata:
-      name: cluster-autoscaler
+      name: efs-csi-controller-sa
       namespace: kube-system
-      labels: {aws-usage: "cluster-ops"}
     wellKnownPolicies:
-      autoScaler: true
+      efsCSIController: true
   - metadata:
-      name: autoscaler-service
-      namespace: kube-system
-    attachPolicy:
-      Version: "2012-10-17"
-      Statement:
-      - Effect: Allow
-        Action:
-        - "autoscaling:DescribeAutoScalingGroups"
-        - "autoscaling:DescribeAutoScalingInstances"
-        - "autoscaling:DescribeLaunchConfigurations"
-        - "autoscaling:DescribeTags"
-        - "autoscaling:SetDesiredCapacity"
-        - "autoscaling:TerminateInstanceInAutoScalingGroup"
-        - "ec2:DescribeLaunchTemplateVersions"
-        Resource: '*'
+      name: cert-manager
+      namespace: cert-manager
+    wellKnownPolicies:
+      certManager: true
 
 managedNodeGroups:
-  - name: skills-app
-    labels: { skills/dedicated: app }
-    instanceType: c5.large
-    instanceName: skills-app
-    desiredCapacity: 2
-    minSize: 2
-    maxSize: 20
-    privateNetworking: true
-    volumeType: gp2
-    volumeEncrypted: true
-    subnets:
-      - private-a
-      - private-b
-      - private-c
-    tags:
-      k8s.io/cluster-autoscaler/enabled: "true"
-      k8s.io/cluster-autoscaler/skills-cluster: "owned"
-    iam:
-      withAddonPolicies:
-        imageBuilder: true
-        externalDNS: true
-        certManager: true
-
-  - name: skills-addon
+  - name: skills-addon-ng
     labels: { skills/dedicated: addon }
     instanceType: c5.large
-    instanceName: skills-addon
+    instanceName: skills-addon-ng
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 20
+    privateNetworking: true
+    volumeType: gp2
+    volumeEncrypted: true
+    taints:
+      - key: "Management"
+        value: "Addons"
+        effect: "NoSchedule"
+    subnets:
+      - private-a
+      - private-b
+      - private-c
+
+  - name: skills-app-ng
+    labels: { skills/dedicated: app }
+    instanceType: c5.large
+    instanceName: skills-app-ng
     desiredCapacity: 2
     minSize: 2
     maxSize: 20
@@ -90,11 +91,3 @@ managedNodeGroups:
       - private-a
       - private-b
       - private-c
-    tags:
-      k8s.io/cluster-autoscaler/enabled: "true"
-      k8s.io/cluster-autoscaler/skills-cluster: "owned"
-    iam:
-      withAddonPolicies:
-        imageBuilder: true
-        externalDNS: true
-        certManager: true

@@ -1,0 +1,27 @@
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualGateway
+metadata:
+  name: skills-gw
+  namespace: skills
+spec:
+  namespaceSelector:
+    matchLabels:
+      gateway: skills-gateway
+  podSelector:
+    matchLabels:
+      app: skills-gateway
+  listeners:
+    - portMapping:
+        port: 80
+        protocol: http
+  logging:
+    accessLog:
+      file:
+        path: /dev/stdout
+---
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: GatewayRoute
+metadata:
+  name: skills-gateway-route
+  namespace: skills

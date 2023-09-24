@@ -1,0 +1,11 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualService
+metadata:
+  name: skills-svc
+  namespace: skills
+spec:
+  awsName: skills-svc.skills.svc.cluster.local
+  provider:
+    virtualRouter:
+      virtualRouterRef:
+        name: skills-virtual-router

@@ -1,0 +1,9 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: Mesh
+metadata:
+  name: skills-mesh
+  namespace: skills
+spec:
+  namespaceSelector:
+    matchLabels:
+      mesh: skills-app
