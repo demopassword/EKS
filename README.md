@@ -1,17 +1,8 @@
 ## EKS Cluster manifest
 Management Node Cluster
-- CA: 
-- Karpenter:
-- App mesh + Karpenter:
-- ALL: 
-
-Worker Node Cluster
-- Wocker Node:  
-
-Fargate on EKS
-- Fargate:
-- Fargate + NodeGroup:
-
+- CA
+- Karpenter
+- ALL
 
 ## ingress controller install
 ```
