@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deploy
+  template:
+    metadata:
+      labels:
+        app: deploy
+    spec:
+      volumes:
+      - name: volume
+        persistentVolumeClaim:
+          claimName: pvc
+      containers:
+      - name: container
+        image: nginx:latest
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: volume
+            mountPath: /usr/share/nginx/html/

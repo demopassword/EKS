@@ -1,0 +1,17 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: Immediate #WaitForFirstConsumer
+reclaimPolicy: Delete #Retain
+parameters:
+  csi.storage.k8s.io/fstype: ext4
+  type: gp2
+allowedTopologies:
+  - matchLabelExpressions:
+    - key: topology.ebs.csi.aws.com/zone
+      values:
+      - ap-northeast-2a
+      - ap-northeast-2b
+      - ap-northeast-2c
