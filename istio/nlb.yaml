@@ -1,0 +1,9 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    gateways:
+      istio-ingressgateway:
+        # Set the AWS load balancer type to "nlb" (Network Load Balancer)
+        serviceAnnotations:
+          service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
