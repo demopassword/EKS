@@ -77,3 +77,7 @@ For online certificates, use Let's Encrypt instead ([tutorial](https://gist.gith
 	SSLEngine on
 	SSLCertificateFile "C:/example/localhost.crt"
 	SSLCertificateKeyFile "C:/example/localhost.key"
+
+# ingress group
+
+하나의 인그레스만 생성되도록 해줌

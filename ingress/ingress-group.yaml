@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: foo-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /foo/index.html
+    alb.ingress.kubernetes.io/group.name: ingress-test
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /foo/
+            pathType: Prefix
+            backend:
+              service:
+                name: foo
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bar-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /bar/index.html
+    alb.ingress.kubernetes.io/group.name: ingress-test
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /bar/
+            pathType: Prefix
+            backend:
+              service:
+                name: bar
+                port:
+                  number: 80

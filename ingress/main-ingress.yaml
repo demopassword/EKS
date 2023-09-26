@@ -16,11 +16,7 @@ metadata:
       alb.ingress.kubernetes.io/healthy-threshold-count: "2"
       alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=30
       alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=bucket-aaaa213123,access_logs.s3.prefix=prefix
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-      alb.ingress.kubernetes.io/ssl-redirect: '443'
       alb.ingress.kubernetes.io/security-groups: sg-07cc7f7a5dd66cbbd
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:532003114460:certificate/45d41e79-3793-4320-b8ef-47fa487ba920
-      alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-1-2017-01
       alb.ingress.kubernetes.io/actions.response-403: >
         {"type":"fixed-response","fixedResponseConfig":{"contentType":"text/plain","statusCode":"403"}}
 spec:
