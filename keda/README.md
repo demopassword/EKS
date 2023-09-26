@@ -28,6 +28,8 @@ encoding base64
 YXJuOmF3czppYW06OjUzMjAwMzExNDQ2MDpyb2xlL0FkbWluaXN0cmF0b3JBY2Nlc3MK
 ```
 
+![Alt text](image-1.png)
+
 ### create secret
 ```yaml
 apiVersion: v1
@@ -42,8 +44,6 @@ data:
 ```bash
 k apply -f ./secret.yaml && k apply -f ./triggerauthentication.yaml && k apply -f ./scaledobject.yaml
 ```
-
-![Alt text](image-1.png)
 
 ## TEST
 
