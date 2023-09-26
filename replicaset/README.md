@@ -14,7 +14,7 @@ k apply -f ./replicaset.yaml
 k get po,rs
 ```
 
-### 레이플 제거
+### 레이블 제거
 ```
 kubectl label pod/echo-rs-cn5gw tier-
 ```
